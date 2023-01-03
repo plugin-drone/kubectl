@@ -1,0 +1,19 @@
+kind: pipeline
+name: "kubectl"
+
+platform:
+  os: linux
+  arch: arm64
+
+steps: 
+
+- name: Docker Image  
+  image: plugins/docker
+  settings:
+    username: 
+      from_secret: docker-username
+    password:
+      from_secret: docker-password
+    repo:
+      from_secret: plugindrone/kubectl
+    tags: latest
