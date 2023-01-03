@@ -1,0 +1,30 @@
+#!/bin/sh
+
+FILE_CFG_CONFIG="/home/kubectl/.kube/config"
+FILE_KUBECTL="/usr/local/kube/kubectl"
+
+if [ -f "${FILE_CFG_CONFIG}" ]; then
+    exec ${FILE_KUBECTL} $@
+else
+    if [ -z "$PLUGIN_KUBECONFIG" ]; then
+        echo "###### ERRO ######"
+        echo "O parametro settings.kube_config não foi informado. Esse parâmetro é necessário para que o kubectl consiga executar comandos no cluster kubernetes."
+        echo
+        echo "Para maiores informações consulte: https://github.com/plugin-drone/kubectl"
+        echo
+        exit 2
+    else
+        # Define a env KUBE_CONFIG
+        export KUBECONFIG=${FILE_CFG_CONFIG}
+        
+        # Cria o diretório do arquivo
+        mkdir /home/kubectl/.kube
+
+        # Validamos se o KUBE_CONFIG foi passado em base64
+        printenv PLUGIN_KUBECONFIG | base64 -d > ${KUBECONFIG} 2>&1
+        if [ ! $? = 0 ]; then
+            printenv PLUGIN_KUBECONFIG > ${KUBECONFIG}
+        fi
+        $@
+    fi
+fi
