@@ -25,6 +25,8 @@ else
         if [ ! $? = 0 ]; then
             printenv PLUGIN_KUBECONFIG > ${KUBECONFIG}
         fi
+        echo "Executando o comando $@"
+        echo
         $@
     fi
 fi
