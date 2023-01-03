@@ -17,3 +17,4 @@ steps:
     repo:
       from_secret: plugindrone/kubectl
     tags: latest
+    dockerfile: build/Dockerfile.amd64
